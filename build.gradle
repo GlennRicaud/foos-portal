@@ -5,7 +5,7 @@ plugins {
 }
 
 xp {
-  version = xpVersion
+    version = xpVersion
 }
 
 app {
@@ -56,11 +56,13 @@ task lessc( dependsOn: processResources ) << {
 jar.dependsOn lessc
 
 task mergeJs( type: com.eriwen.gradle.js.tasks.CombineJsTask ) {
-    source = ["${rootProject.buildDir}/resources/main/assets/js/shell/header.js"
-              ,"${rootProject.buildDir}/resources/main/assets/js/shell/main.js"
-              ,"${rootProject.buildDir}/resources/main/assets/js/graphql/graphql-service.js"
-              ,"${rootProject.buildDir}/resources/main/assets/js/league/leagues-view.js"
-              ,"${rootProject.buildDir}/resources/main/assets/js/app.js"]
+    source = ["${rootProject.buildDir}/resources/main/assets/js/common/icon.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/shell/header.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/shell/main.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/graphql/graphql-service.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/league/league-item.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/league/leagues-view.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/app.js"]
     dest = file( "${rootProject.buildDir}/resources/main/assets/js/main.js" )
 }
 jar.dependsOn mergeJs

@@ -2,16 +2,23 @@ class FoosApplication extends RcdObject {
     constructor() {
         super();
         this.header = new FoosHeader().init();
+        this.main = FoosMain.getInstance();
+    }
+
+    init() {
+        return super.init()
+            .createViews();
+    }
+
+    createViews() {
+        new FoosLeaguesView().init();
+        return this;
     }
 
     start() {
         this.header.setParent(document.body);
-        FoosMain.getInstance().setParent(document.body);
+        this.main.setParent(document.body);
 
-
-        new FoosLeaguesView().init();
-        
         RcdHistoryRouter.refresh();
-       
     }
 }

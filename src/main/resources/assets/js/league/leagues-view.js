@@ -15,7 +15,7 @@ class FoosLeaguesView extends RcdDivElement {
 
     init() {
         return super.init()
-            .addChild(this.tmp)
+            .addClass('foos-leagues-view')
             .registerRoute();
     }
 
@@ -32,9 +32,7 @@ class FoosLeaguesView extends RcdDivElement {
         this.clear();
         return this.retrieveLeagues().then(leagues => {
             leagues.sort(this.compareLeagues)
-                .map(league => {
-                     return new RcdTextElement(league.name).init();
-                })
+                .map(league => new FoosLeagueItem(league).init())
                 .forEach(leagueResult => this.addChild(leagueResult));
         });
     }
