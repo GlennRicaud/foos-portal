@@ -19,6 +19,7 @@ dependencies {
     compile "com.enonic.xp:portal-api:${xpVersion}"
     include "com.enonic.xp:lib-content:${xpVersion}"
     include "com.enonic.xp:lib-portal:${xpVersion}"
+    include "com.enonic.xp:lib-mustache:${xpVersion}"
 }
 
 repositories {
