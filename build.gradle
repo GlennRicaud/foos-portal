@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.enonic.xp.app' version '1.0.13'
+    id 'com.eriwen.gradle.js' version '2.14.1'
 }
 
 xp {
@@ -14,6 +15,10 @@ app {
     vendorUrl = 'http://rcd.systems'
 }
 
+configurations {
+    rcdjsfwkcore
+}
+
 dependencies {
     compile "com.enonic.xp:core-api:${xpVersion}"
     compile "com.enonic.xp:portal-api:${xpVersion}"
@@ -21,10 +26,37 @@ dependencies {
     include "com.enonic.xp:lib-portal:${xpVersion}"
     include "com.enonic.xp:lib-mustache:${xpVersion}"
     include "com.enonic.lib:lib-router:1.0.0"
+    rcdjsfwkcore "systems.rcd.js.fwk.core:rcd-jsfwk-core:3.0.0-alpha-3"
+    compile "systems.rcd.js.fwk.core:rcd-jsfwk-core:3.0.0-alpha-3"
 }
 
 repositories {
     mavenLocal()
     jcenter()
     xp.enonicRepo()
+    maven {
+        url "http://dl.bintray.com/rcd-systems/rcd-repo"
+    }
 }
+
+task extractRcdJsFwk( type: Copy ) {
+    from { configurations.rcdjsfwkcore.collect { zipTree( it ); } }
+    into "${rootProject.buildDir}/resources/main/"
+    exclude 'META-INF/**'
+}
+processResources.dependsOn extractRcdJsFwk
+
+task lessc( dependsOn: processResources ) << {
+    exec {
+        executable 'lessc'
+        args 'build/resources/main/assets/style/main.less',
+             'build/resources/main/assets/style/main.css'
+    }
+}
+jar.dependsOn lessc
+
+task mergeJs( type: com.eriwen.gradle.js.tasks.CombineJsTask ) {
+    source = ["${rootProject.buildDir}/resources/main/assets/js/app.js"]
+    dest = file( "${rootProject.buildDir}/resources/main/assets/js/main.js" )
+}
+jar.dependsOn mergeJs
