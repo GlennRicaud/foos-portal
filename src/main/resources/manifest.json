@@ -1,0 +1,14 @@
+{
+  "name": "Foos Portal",
+  "short_name": "Foos Portal",
+  "start_url": "{{startUrl}}",
+  "display": "standalone",
+  "description": "Foos Portal.",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}
