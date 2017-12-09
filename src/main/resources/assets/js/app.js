@@ -6,5 +6,6 @@ class FoosApplication extends RcdObject {
 
     start() {
         this.header.setParent(document.body);
+        FoosMain.getInstance().setParent(document.body);
     }
 }

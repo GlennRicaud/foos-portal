@@ -1,15 +1,25 @@
 @import "rcd-jsfwk-core";
 
+@header-size: 64px;
+@header-background-color: #002657;
+
 .foos-header {
   position: fixed;
   width: 100%;
-  height: 64px;
+  height: @header-size;
   padding: 0 32px;
-  background-color: #002657;
+  background-color: @header-background-color;
   color: #fff;
 
   font-size: 24px;
 
   display: flex;
   align-items: center;
+}
+
+.foos-main {
+  position: fixed;
+  width: 100%;
+  top: @header-size;
+  bottom: 0;
 }
