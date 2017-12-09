@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="rcd-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
@@ -12,16 +12,19 @@
 
     <link rel="stylesheet" href="{{baseUrl}}/style/main.css">
     <script src="{{baseUrl}}/js/main.js"></script>
-    
+
 </head>
-<body>
-<p>Foos Portal</p>
+<body class="rcd-body">
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
             navigator.serviceWorker
                 .register('{{baseUrl}}/sw.js', {scope: "{{baseUrl}}"})
-                .then((registration) => console.log('Registration successful, scope is:', registration.scope))
+                .then((registration) => {
+                    console.log('Registration successful, scope is:', registration.scope);
+
+                    new FoosApplication().init().start();
+                })
                 .catch((error) => console.log('Service worker registration failed, error:', error));
         });
     }
