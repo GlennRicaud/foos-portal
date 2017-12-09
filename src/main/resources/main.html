@@ -16,6 +16,12 @@
 </head>
 <body class="rcd-body">
 <script>
+    const config = {
+        appUrl: "{{appUrl}}",
+        baseUrl: "{{baseUrl}}",
+        officeLeagueAppUrl: "{{officeLeagueAppUrl}}"
+    };
+    
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
             navigator.serviceWorker
