@@ -23,6 +23,8 @@ class FoosLeagueView extends RcdDivElement {
         return this.retrieveData().then(data => {
             const division1Panel = new FoosRankingPanel('Players - Division 1', data.playerRanking, 'Player').init();
             this.addChild(division1Panel);
+            
+            this.addChild(new FoosRankingChart().init());
         });
     }
 
