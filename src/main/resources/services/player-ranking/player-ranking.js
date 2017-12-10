@@ -26,7 +26,7 @@ exports.post = function (req) {
     var ranking = leaguePlayers.map(function (leaguePlayer) {
         var player = storeLib.getByKey(leaguePlayer.playerId);
         return {
-            playerName: player && player.name,
+            name: player && player.name,
             imageUrl: player && '/players/image/' + player._versionKey + '/' + encodeURIComponent(player.name),
             rating: leaguePlayer.rating,
             rampedRating: leaguePlayer.rampedRating,
@@ -47,8 +47,3 @@ exports.post = function (req) {
         }
     }
 };
-
-function hasPlayerEnoughGames(leaguePlayerId) {
-
-}
-

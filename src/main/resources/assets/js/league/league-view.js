@@ -21,8 +21,8 @@ class FoosLeagueView extends RcdDivElement {
     refresh() {
         this.clear();
         return this.retrievePlayerRanking().then(ranking => {
-            ranking.map((rankingItem, index) => new FoosPlayerRankingItem(rankingItem, index + 1).init())
-                .forEach(leagueResult => this.addChild(leagueResult));
+            const division1Panel = new FoosDivisionRankingPanel('Players - Division 1', ranking, 'Player').init();
+            this.addChild(division1Panel);
         });
     }
 
