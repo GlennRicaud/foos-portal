@@ -18,9 +18,14 @@ class FoosRankingChart extends RcdDivElement {
                 labels: ["January", "February", "March", "April", "May", "June", "July"],
                 datasets: [{
                     label: "My First dataset",
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
+                    fill: false,
+                    borderColor: '#002657',
                     data: [0, 10, 5, 2, 20, 30, 45],
+                }, {
+                    label: "My Second dataset",
+                    fill: false,
+                    borderColor: '#002657',
+                    data: [0, 5, 10, 2, 20, 35, 45],
                 }]
             },
             options: {
