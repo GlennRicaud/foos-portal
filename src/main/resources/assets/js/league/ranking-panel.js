@@ -1,4 +1,4 @@
-class FoosDivisionRankingPanel extends RcdDivElement {
+class FoosRankingPanel extends RcdDivElement {
     constructor(title, ranking, type) {
         super();
         this.title = new RcdTextDivElement(title).init();
@@ -8,7 +8,7 @@ class FoosDivisionRankingPanel extends RcdDivElement {
 
     init() {
         return super.init()
-            .addClass('foos-division-ranking-panel')
+            .addClass('foos-ranking-panel')
             .addChild(this.createTable());
     }
 
@@ -22,9 +22,10 @@ class FoosDivisionRankingPanel extends RcdDivElement {
         const tableBody = new RcdTbodyElement().init();
         this.ranking.map((rankingItem, index) => new RcdTrElement().init()
             .addChild(new RcdTdElement().init().setText(index + 1))
-            .addChild(new RcdTdElement().init()
+            .addChild(new RcdTdElement().init().addChild(new RcdDivElement().init()
+                .addClass('foos-table-cell-name')
                 .addChild(new FoosIcon(rankingItem.imageUrl).init())
-                .addChild(new RcdTextElement(rankingItem.name).init()))
+                .addChild(new RcdTextElement(rankingItem.name).init())))
             .addChild(new RcdTdElement().init().setText(Math.floor(rankingItem.rampedRating)))
         ).forEach((tr) => tableBody.addChild(tr));
 
