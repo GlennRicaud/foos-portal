@@ -1,36 +1,18 @@
 @import "rcd-jsfwk-core";
 @import "common/icon";
+@import "shell/header";
+@import "shell/main";
 @import "league/league-item";
 @import "league/leagues-view";
 
 @header-size: 64px;
 @header-background-color: #002657;
 
-.foos-header {
-  position: fixed;
-  width: 100%;
-  height: @header-size;
-  padding: 0 32px;
-  background-color: @header-background-color;
-  color: #fff;
-
-  font-size: 24px;
-
-  display: flex;
-  align-items: center;
-}
-
-.foos-main {
-  position: fixed;
-  width: 100%;
-  top: @header-size;
-  bottom: 0;
-}
-
 table {
   text-align: left;
 }
 
+//TODO 
 .foos-table-cell-name {
   display: flex;
   align-items: center;
