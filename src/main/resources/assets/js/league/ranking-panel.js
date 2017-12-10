@@ -16,7 +16,6 @@ class FoosRankingPanel extends RcdDivElement {
         const tableHeaderRow = new RcdTrElement().init()
             .addChild(new RcdThElement().setText('Pos.'))
             .addChild(new RcdThElement().setText(this.type))
-            .addChild(new RcdThElement().setText('Raw pts.'))
             .addChild(new RcdThElement().setText('Pts.'));
         const tableHeader = new RcdTheadElement().init().addChild(tableHeaderRow);
 
@@ -27,8 +26,9 @@ class FoosRankingPanel extends RcdDivElement {
                 .addClass('foos-table-cell-name')
                 .addChild(new FoosIcon(rankingItem.imageUrl).init())
                 .addChild(new RcdTextElement(rankingItem.name).init())))
-            .addChild(new RcdTdElement().init().setText(Math.floor(rankingItem.rating)))
-            .addChild(new RcdTdElement().init().setText(Math.floor(rankingItem.rampedRating)))
+            .addChild(new RcdTdElement().init().setText(Math.floor(rankingItem.rampedRating) +
+                                                        (rankingItem.rating === rankingItem.rampedRating ? '' : ' (' +
+                                                        Math.floor(rankingItem.rating) + ')')))
         ).forEach((tr) => tableBody.addChild(tr));
 
         return new RcdTableElement().init()
