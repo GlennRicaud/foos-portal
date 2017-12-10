@@ -24,7 +24,11 @@ class FoosRankingChart extends RcdDivElement {
                 }]
             },
             options: {
-                responsive: true
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                }
             }
         });
         return this;
