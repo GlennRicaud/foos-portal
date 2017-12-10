@@ -20,14 +20,14 @@ class FoosLeagueView extends RcdDivElement {
 
     refresh() {
         this.clear();
-        return this.retrievePlayerRanking().then(ranking => {
-            const division1Panel = new FoosRankingPanel('Players - Division 1', ranking, 'Player').init();
+        return this.retrieveData().then(data => {
+            const division1Panel = new FoosRankingPanel('Players - Division 1', data.playerRanking, 'Player').init();
             this.addChild(division1Panel);
         });
     }
 
-    retrievePlayerRanking() {
+    retrieveData() {
         const leagueId = RcdHistoryRouter.getParameters().leagueId;
-        return RestService.fetch('player-ranking', {leagueId: leagueId});
+        return RestService.fetch('league-data', {leagueId: leagueId});
     }
 }

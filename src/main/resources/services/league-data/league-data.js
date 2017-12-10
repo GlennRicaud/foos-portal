@@ -2,6 +2,17 @@ var storeLib = require('/lib/store');
 
 exports.post = function (req) {
     var leagueId = JSON.parse(req.body).leagueId;
+    return {
+        contentType: 'application/json',
+        body: {
+            data: {
+                playerRanking: getPlayerRanking(leagueId)
+            }
+        }
+    }
+};
+
+function getPlayerRanking(leagueId) {
     var leaguePlayers = storeLib.getLeaguePlayersByLeagueId(leagueId);
 
     //Filters players not having played in the X last games
@@ -36,14 +47,7 @@ exports.post = function (req) {
     });
 
     //Sorting players by ramped rating DESC
-    ranking = ranking.sort(function (ranking1, ranking2) {
+    return ranking.sort(function (ranking1, ranking2) {
         return ranking2.rampedRating - ranking1.rampedRating;
     });
-
-    return {
-        contentType: 'application/json',
-        body: {
-            data: ranking
-        }
-    }
-};
+}
