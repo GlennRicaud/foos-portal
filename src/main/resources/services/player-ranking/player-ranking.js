@@ -20,7 +20,8 @@ exports.post = function (req) {
     leaguePlayers.forEach(function (leaguePlayer) {
         var gamesCount = storeLib.getGamesCountByLeagueIdPlayerId(leagueId, leaguePlayer.playerId);
         leaguePlayer.gamesCount = gamesCount;
-        leaguePlayer.rampedRating = leaguePlayer.rating * ( 0.5 + 0.5 * Math.min(50, gamesCount) / 50);
+        leaguePlayer.rampingCoef = 0.75 + 0.25 * Math.min(50, gamesCount) / 50;
+        leaguePlayer.rampedRating = leaguePlayer.rating * leaguePlayer.rampingCoef;
     });
 
     //Gather additional info and remove useless
@@ -30,8 +31,14 @@ exports.post = function (req) {
             playerName: player && player.name,
             rating: leaguePlayer.rating,
             rampedRating: leaguePlayer.rampedRating,
+            rampingCoef: leaguePlayer.rampingCoef,
             gamesCount: leaguePlayer.gamesCount
         };
+    });
+
+    //Sorting players by ramped rating DESC
+    ranking = ranking.sort(function (ranking1, ranking2) {
+        return ranking2.rampedRating - ranking1.rampedRating;
     });
 
     return {
