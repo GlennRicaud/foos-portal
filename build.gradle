@@ -60,7 +60,10 @@ task mergeJs( type: com.eriwen.gradle.js.tasks.CombineJsTask ) {
     source = ["${rootProject.buildDir}/resources/main/assets/js/common/icon.js"
               , "${rootProject.buildDir}/resources/main/assets/js/shell/header.js"
               , "${rootProject.buildDir}/resources/main/assets/js/shell/main.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/rest/rest-service.js"
               , "${rootProject.buildDir}/resources/main/assets/js/graphql/graphql-service.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/league/player-ranking-item.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/league/league-view.js"
               , "${rootProject.buildDir}/resources/main/assets/js/league/league-item.js"
               , "${rootProject.buildDir}/resources/main/assets/js/league/leagues-view.js"
               , "${rootProject.buildDir}/resources/main/assets/js/app.js"]

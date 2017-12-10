@@ -1,4 +1,5 @@
 var mustacheLib = require('/lib/xp/mustache');
+var portalLib = require('/lib/xp/portal');
 var router = require('/lib/router')();
 
 var urlLib = require("/lib/url");
@@ -12,6 +13,7 @@ router.get('/', function (req) {
         body: mustacheLib.render(mainTemplate, {
             appUrl: urlLib.getAppUrl(),
             baseUrl: urlLib.getBaseUrl(),
+            serviceUrl: portalLib.serviceUrl({service:''}),
             officeLeagueAppUrl: '/portal/draft/office-league/app' //TODO
         }),
         contentType: 'text/html'

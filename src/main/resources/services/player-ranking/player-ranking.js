@@ -6,12 +6,10 @@ exports.post = function (req) {
 
     //Filters players not having played in the X last games
     var firstRankingGame = storeLib.getFirstRankingGame(leagueId);
-    log.info('firstRankingGame.time:' + firstRankingGame.time);
     if (firstRankingGame) {
         var timeMin = firstRankingGame.time;
         leaguePlayers = leaguePlayers.filter(function (leaguePlayer) {
             var lastGamePlayer = storeLib.getLastGamePlayerByLeagueIdPlayerId(leagueId, leaguePlayer.playerId);
-            log.info(lastGamePlayer && lastGamePlayer.time);
             return lastGamePlayer && lastGamePlayer.time.localeCompare(timeMin) >= 0;
         });
     }
