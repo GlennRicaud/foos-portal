@@ -5,7 +5,7 @@ class FoosLeagueView extends RcdDivElement {
 
     init() {
         return super.init()
-            .addClass('foos-leagues-view')
+            .addClass('foos-league-view')
             .registerRoute();
     }
 
