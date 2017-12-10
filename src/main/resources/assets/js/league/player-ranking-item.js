@@ -7,6 +7,9 @@ class FoosPlayerRankingItem extends RcdDivElement {
         this.playerName = new RcdTextDivElement(playerRankingItem.playerName)
             .addClass('foos-league-item-text')
             .init();
+        this.image = new FoosIcon(playerRankingItem.imageUrl)
+            .addClass('foos-league-item-text')
+            .init();
         this.rating = new RcdTextDivElement(Math.floor(playerRankingItem.rampedRating))
             .addClass('foos-league-item-text')
             .init();
@@ -16,6 +19,7 @@ class FoosPlayerRankingItem extends RcdDivElement {
         return super.init()
             .addClass('foos-player-ranking-item')
             .addChild(this.ranking)
+            .addChild(this.image)
             .addChild(this.playerName)
             .addChild(this.rating);
     }

@@ -27,6 +27,7 @@ exports.post = function (req) {
         var player = storeLib.getByKey(leaguePlayer.playerId);
         return {
             playerName: player && player.name,
+            imageUrl: player && '/players/image/' + player._versionKey + '/' + encodeURIComponent(player.name),
             rating: leaguePlayer.rating,
             rampedRating: leaguePlayer.rampedRating,
             rampingCoef: leaguePlayer.rampingCoef,
