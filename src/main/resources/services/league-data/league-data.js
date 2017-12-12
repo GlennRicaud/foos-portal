@@ -6,7 +6,7 @@ exports.post = function (req) {
     var playersData = {};
     getPlayerRankingData(leagueId, playersData);
     getPlayersData(playersData);
-    //getRatingData(playersData);
+    getPlayerRatingData(leagueId, playersData);
 
     return {
         contentType: 'application/json',
@@ -53,24 +53,28 @@ function getPlayerRankingData(leagueId, playersData) {
 function getPlayersData(playersData) {
     for (var playerId in playersData) {
         var player = storeLib.getByKey(playerId);
-        playersData[playerId].name= player && player.name;
-        playersData[playerId].imageUrl= player && '/players/image/' + player._versionKey + '/' + encodeURIComponent(player.name);
+        playersData[playerId].name = player && player.name;
+        playersData[playerId].imageUrl = player && '/players/image/' + player._versionKey + '/' + encodeURIComponent(player.name);
     }
 }
 
-// function getGamesData(leagueId) {
-//     return getGamesByLeagueId(leagueId).map(function (game) {
-//         var playerDeltas = getGamePlayersByGameId(game._id).map(function (gamePlayer) {
-//             return {
-//                 competitorId: gamePlayer.playerId,
-//                 delta: gamePlayer.ratingDelta
-//             };
-//         });
-//         return {
-//             playerDeltas: playerDeltas
-//         };
-//     });
-// }
+function getPlayerRatingData(leagueId, playersData) {
+    for (var playerId in playersData) {
+        playersData[playerId].ratings = [];
+        playersData[playerId].ratings[100] = playersData[playerId].rating;
+    }
+
+    var gameIndex = 99;
+    return getGamesByLeagueId(leagueId).forEach(function (game) {
+        for (var playerId in playersData) {
+            playersData[playerId].ratings[gameIndex] = playersData[playerId].rating;
+        }
+        getGamePlayersByGameId(game._id).map(function (gamePlayer) {
+            playersData[gamePlayer.playerId].ratings[gameIndex] -= gamePlayer.ratingDelta;
+        });
+        gameIndex--;
+    });
+}
 
 function getLeaguePlayersByLeagueId(leagueId) {
     return storeLib.get({
