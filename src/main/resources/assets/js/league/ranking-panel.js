@@ -1,8 +1,9 @@
 class FoosRankingPanel extends RcdDivElement {
-    constructor(title, ranking, type) {
+    constructor(title, ranking, competitorMap, type) {
         super();
         this.title = new RcdTextDivElement(title).init();
         this.ranking = ranking;
+        this.competitorMap = competitorMap;
         this.type = type;
     }
 
@@ -24,8 +25,8 @@ class FoosRankingPanel extends RcdDivElement {
             .addChild(new RcdTdElement().init().setText(index + 1))
             .addChild(new RcdTdElement().init().addChild(new RcdDivElement().init()
                 .addClass('foos-table-cell-name')
-                .addChild(new FoosIcon(rankingItem.imageUrl).init())
-                .addChild(new RcdTextElement(rankingItem.name).init())))
+                .addChild(new FoosIcon(this.competitorMap[rankingItem.competitorId].imageUrl).init())
+                .addChild(new RcdTextElement(this.competitorMap[rankingItem.competitorId].name).init())))
             .addChild(new RcdTdElement().init().setText(Math.floor(rankingItem.rampedRating) +
                                                         (rankingItem.rating === rankingItem.rampedRating ? '' : ' (' +
                                                         Math.floor(rankingItem.rating) + ')')))

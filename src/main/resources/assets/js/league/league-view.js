@@ -21,7 +21,7 @@ class FoosLeagueView extends RcdDivElement {
     refresh() {
         this.clear();
         return this.retrieveData().then(data => {
-            const division1Panel = new FoosRankingPanel('Players - Division 1', data.playerRanking, 'Player').init();
+            const division1Panel = new FoosRankingPanel('Players - Division 1', data.playerRanking, data.players, 'Player').init();
             this.addChild(division1Panel);
             
             this.addChild(new FoosRankingChart().init());
