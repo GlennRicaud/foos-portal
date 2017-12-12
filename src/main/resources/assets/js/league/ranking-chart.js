@@ -1,7 +1,19 @@
 class FoosRankingChart extends RcdDivElement {
-    constructor() {
+    constructor(data) {
         super();
         this.canvas = new RcdHtmlElement('canvas').init();
+        this.datasets = Object.values(data).map(competitorData => {
+            return {
+                label: competitorData.name,
+                fill: false,
+                borderColor: '#002657',
+                data: competitorData.ratings,
+            }
+        });
+        this.labels = [];
+        for (let i = 0; i < 100; i++) {
+            this.labels[i]= 'Game' + i;
+        }
     }
 
     init() {
@@ -15,18 +27,8 @@ class FoosRankingChart extends RcdDivElement {
         new Chart(this.canvas.domElement.getContext('2d'), {
             type: 'line',
             data: {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [{
-                    label: "My First dataset",
-                    fill: false,
-                    borderColor: '#002657',
-                    data: [0, 10, 5, 2, 20, 30, 45],
-                }, {
-                    label: "My Second dataset",
-                    fill: false,
-                    borderColor: '#002657',
-                    data: [0, 5, 10, 2, 20, 35, 45],
-                }]
+                labels: this.labels,
+                datasets: this.datasets
             },
             options: {
                 responsive: true,

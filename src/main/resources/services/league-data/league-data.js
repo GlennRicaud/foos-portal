@@ -59,19 +59,21 @@ function getPlayersData(playersData) {
 }
 
 function getPlayerRatingData(leagueId, playersData) {
+    var currentRatings = {};
     for (var playerId in playersData) {
         playersData[playerId].ratings = [];
         playersData[playerId].ratings[100] = playersData[playerId].rating;
+        currentRatings[playerId] = playersData[playerId].rating;
     }
 
     var gameIndex = 99;
     return getGamesByLeagueId(leagueId).forEach(function (game) {
-        for (var playerId in playersData) {
-            playersData[playerId].ratings[gameIndex] = playersData[playerId].rating;
-        }
         getGamePlayersByGameId(game._id).map(function (gamePlayer) {
-            playersData[gamePlayer.playerId].ratings[gameIndex] -= gamePlayer.ratingDelta;
+            currentRatings[gamePlayer.playerId] -= gamePlayer.ratingDelta;
         });
+        for (var playerId in playersData) {
+            playersData[playerId].ratings[gameIndex] = currentRatings[playerId];
+        }
         gameIndex--;
     });
 }
