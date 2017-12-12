@@ -4,15 +4,17 @@ exports.post = function (req) {
     var leagueId = JSON.parse(req.body).leagueId;
 
     var playersData = {};
+    var gameDates = [];
     getPlayerRankingData(leagueId, playersData);
     getPlayersData(playersData);
-    getPlayerRatingData(leagueId, playersData);
+    getPlayerRatingData(leagueId, playersData, gameDates);
 
     return {
         contentType: 'application/json',
         body: {
             data: {
-                playersData: playersData
+                playersData: playersData,
+                gameDates: gameDates
             }
         }
     }
@@ -58,7 +60,7 @@ function getPlayersData(playersData) {
     }
 }
 
-function getPlayerRatingData(leagueId, playersData) {
+function getPlayerRatingData(leagueId, playersData, gameDates) {
     var currentRatings = {};
     for (var playerId in playersData) {
         playersData[playerId].ratings = [];
@@ -74,6 +76,7 @@ function getPlayerRatingData(leagueId, playersData) {
         for (var playerId in playersData) {
             playersData[playerId].ratings[gameIndex] = currentRatings[playerId];
         }
+        gameDates[gameIndex] = game.time.substr(0, 10);
         gameIndex--;
     });
 }
