@@ -3,29 +3,22 @@ var storeLib = require('/lib/store');
 exports.post = function (req) {
     var leagueId = JSON.parse(req.body).leagueId;
 
-    var playersMap = {};
-    var playerRankingData = getPlayerRankingData(leagueId);
-    playerRankingData.forEach(function(playerRankingDataItem) {
-        var player = storeLib.getByKey(playerRankingDataItem.competitorId);
-        playersMap[playerRankingDataItem.competitorId] = {
-            name: player && player.name,
-            imageUrl: player && '/players/image/' + player._versionKey + '/' + encodeURIComponent(player.name)
-        }
-    });
-    
+    var playersData = {};
+    getPlayerRankingData(leagueId, playersData);
+    getPlayersData(playersData);
+    //getRatingData(playersData);
+
     return {
         contentType: 'application/json',
         body: {
             data: {
-                playerRanking: playerRankingData,
-                players: playersMap,
-                games: getGamesData(leagueId)
+                playersData: playersData
             }
         }
     }
 };
 
-function getPlayerRankingData(leagueId) {
+function getPlayerRankingData(leagueId, playersData) {
     var leaguePlayers = getLeaguePlayersByLeagueId(leagueId);
 
     //Filters players not having played in the X last games
@@ -47,30 +40,49 @@ function getPlayerRankingData(leagueId) {
     });
 
     //Gather additional info and remove useless
-    var ranking = leaguePlayers.map(function (leaguePlayer) {
-        return {
-            competitorId: leaguePlayer.playerId,
+    leaguePlayers.forEach(function (leaguePlayer) {
+        playersData[leaguePlayer.playerId] = {
             rating: leaguePlayer.rating,
             rampedRating: leaguePlayer.rampedRating,
             rampingCoef: leaguePlayer.rampingCoef,
             gamesCount: leaguePlayer.gamesCount
         };
     });
-
-    //Sorting players by ramped rating DESC
-    return ranking.sort(function (ranking1, ranking2) {
-        return ranking2.rampedRating - ranking1.rampedRating;
-    });
 }
 
-function getGamesData(leagueId) {
-    return [];
+function getPlayersData(playersData) {
+    for (var playerId in playersData) {
+        var player = storeLib.getByKey(playerId);
+        playersData[playerId].name= player && player.name;
+        playersData[playerId].imageUrl= player && '/players/image/' + player._versionKey + '/' + encodeURIComponent(player.name);
+    }
 }
+
+// function getGamesData(leagueId) {
+//     return getGamesByLeagueId(leagueId).map(function (game) {
+//         var playerDeltas = getGamePlayersByGameId(game._id).map(function (gamePlayer) {
+//             return {
+//                 competitorId: gamePlayer.playerId,
+//                 delta: gamePlayer.ratingDelta
+//             };
+//         });
+//         return {
+//             playerDeltas: playerDeltas
+//         };
+//     });
+// }
 
 function getLeaguePlayersByLeagueId(leagueId) {
     return storeLib.get({
         query: 'type="leaguePlayer" AND leagueId="' + leagueId + '"',
         count: 1024
+    });
+}
+
+function getGamePlayersByGameId(gameId) {
+    return storeLib.get({
+        query: 'type="gamePlayer" AND gameId="' + gameId + '"',
+        count: 4
     });
 }
 
