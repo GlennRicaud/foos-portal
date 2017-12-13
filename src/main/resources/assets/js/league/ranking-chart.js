@@ -38,7 +38,7 @@ class FoosRankingChart extends RcdDivElement {
         super();
         this.canvas = new RcdHtmlElement('canvas').init();
         this.datasets = Object.values(data).sort((competitorData1,competitorData2) => {
-            return competitorData2.rampedRating - competitorData1.rampedRating;
+            return competitorData2.rating - competitorData1.rating;
         }).map((competitorData, index) => {
             return {
                 label: competitorData.name,

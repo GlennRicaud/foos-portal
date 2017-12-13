@@ -1,5 +1,9 @@
 var storeLib = require('/lib/store');
 
+var GAME_RANGE = 100;
+var RAMPING_DURATION = 50;
+var STARTING_RAMPING_COEF = 0.80;
+
 exports.post = function (req) {
     var leagueId = JSON.parse(req.body).leagueId;
 
@@ -37,11 +41,11 @@ function getPlayerRankingData(leagueId, playersData) {
     leaguePlayers.forEach(function (leaguePlayer) {
         var gamesCount = getGamesCountByLeagueIdPlayerId(leagueId, leaguePlayer.playerId);
         leaguePlayer.gamesCount = gamesCount;
-        leaguePlayer.rampingCoef = 0.75 + 0.25 * Math.min(50, gamesCount) / 50;
+        leaguePlayer.rampingCoef = getRampingCoef(gamesCount);
         leaguePlayer.rampedRating = leaguePlayer.rating * leaguePlayer.rampingCoef;
     });
 
-    //Gather additional info and remove useless
+    //Return only useful information
     leaguePlayers.forEach(function (leaguePlayer) {
         playersData[leaguePlayer.playerId] = {
             rating: leaguePlayer.rating,
@@ -50,6 +54,10 @@ function getPlayerRankingData(leagueId, playersData) {
             gamesCount: leaguePlayer.gamesCount
         };
     });
+}
+
+function getRampingCoef(gamesCount) {
+    return STARTING_RAMPING_COEF + (1 - STARTING_RAMPING_COEF) * Math.min(RAMPING_DURATION, gamesCount) / RAMPING_DURATION;
 }
 
 function getPlayersData(playersData) {
@@ -64,11 +72,11 @@ function getPlayerRatingData(leagueId, playersData, gameDates) {
     var currentRatings = {};
     for (var playerId in playersData) {
         playersData[playerId].ratings = [];
-        playersData[playerId].ratings[100] = playersData[playerId].rating;
+        playersData[playerId].ratings[GAME_RANGE] = playersData[playerId].rating;
         currentRatings[playerId] = playersData[playerId].rating;
     }
 
-    var gameIndex = 99;
+    var gameIndex = GAME_RANGE - 1;
     return getGamesByLeagueId(leagueId).forEach(function (game) {
         getGamePlayersByGameId(game._id).map(function (gamePlayer) {
             currentRatings[gamePlayer.playerId] -= gamePlayer.ratingDelta;
@@ -98,7 +106,7 @@ function getGamePlayersByGameId(gameId) {
 function getGamesByLeagueId(leagueId) {
     return storeLib.get({
         query: 'type="game" AND leagueId="' + leagueId + '"',
-        count: 100,
+        count: GAME_RANGE,
         sort: 'time DESC'
     });
 }
@@ -106,7 +114,7 @@ function getGamesByLeagueId(leagueId) {
 function getFirstRankingGame(leagueId) {
     return storeLib.get({
         query: 'type="game" AND leagueId="' + leagueId + '"',
-        start: 99,
+        start: GAME_RANGE - 1,
         count: 1,
         sort: 'time DESC'
     });
