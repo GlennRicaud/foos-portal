@@ -35,11 +35,16 @@ function getData(leagueId) {
     getEntitiesData(teamsData, 'Team');
     getEntityRatingData(leagueId, playersData, teamsData, gameDates);
     
+    var playersDivisions = getEntitiesDivisions(playersData);
+    var teamsDivisions = getEntitiesDivisions(teamsData);
+    
     return {
         data: {
             playersData: playersData,
             teamsData: teamsData,
-            gameDates: gameDates
+            gameDates: gameDates,
+            playersDivisions: playersDivisions,
+            teamsDivisions: teamsDivisions
         }
     };
 }
@@ -134,6 +139,30 @@ function getEntityRatingData(leagueId, playersData, teamsData, gameDates) {
             gameIndex--;
         });
     }
+}
+
+function getEntitiesDivisions(data) {
+    var entitiesDivisions = [];
+
+    var sortedCompetitorIds = Object.keys(data)
+        .sort(function(competitorId1, competitorId2) {
+            return data[competitorId2].rampedRating - data[competitorId1].rampedRating;
+        });
+    
+    var currentCompetitorIndex = 0;
+    var divisionSize = sortedCompetitorIds.length > 20 ? 12 : sortedCompetitorIds.length;
+    var divisionCount = sortedCompetitorIds.length / divisionSize;
+    
+    for (var i = 0; i < divisionCount; i++) {
+        var currentDivision = [];
+        entitiesDivisions.push(currentDivision);
+        for (var j = 0; j < divisionSize; j++) {
+            currentDivision.push(sortedCompetitorIds[currentCompetitorIndex]);
+            currentCompetitorIndex++;
+        }
+    }
+    
+    return entitiesDivisions;
 }
 
 function getLeagueEntitiesByLeagueId(leagueId, type) {
