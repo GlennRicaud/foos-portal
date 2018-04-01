@@ -2,7 +2,8 @@ var storeLib = require('/lib/store');
 var cacheLib = require('/lib/cache');
 
 var GAME_RANGE = 100;
-var RAMPING_DURATION = 50;
+var PLAYER_RAMPING_DURATION = 50;
+var TEAM_RAMPING_DURATION = 20;
 var STARTING_RAMPING_COEF = 0.80;
 
 var cache = cacheLib.newCache({
@@ -58,7 +59,7 @@ function getEntityRankingData(leagueId, playersData, type) {
 
     //Adapt for ramping entities
     leagueEntities.forEach(function (leagueEntity) {
-        var gamesCount = getGamesCountByLeagueIdPlayerId(leagueId, leagueEntity[getIdName(type)]);
+        var gamesCount = getGamesCountByLeagueIdEntityId(leagueId, leagueEntity[getIdName(type)], type);
         leagueEntity.gamesCount = gamesCount;
         leagueEntity.rampingCoef = getRampingCoef(gamesCount);
         leagueEntity.rampedRating = leagueEntity.rating * leagueEntity.rampingCoef;
@@ -83,8 +84,12 @@ function getIdName(type) {
     }
 }
 
-function getRampingCoef(gamesCount) {
-    return STARTING_RAMPING_COEF + (1 - STARTING_RAMPING_COEF) * Math.min(RAMPING_DURATION, gamesCount) / RAMPING_DURATION;
+function getRampingCoef(gamesCount, type) {
+    if (type == 'Player') {
+        return STARTING_RAMPING_COEF + (1 - STARTING_RAMPING_COEF) * Math.min(PLAYER_RAMPING_DURATION, gamesCount) / PLAYER_RAMPING_DURATION;
+    } else {
+        return STARTING_RAMPING_COEF + (1 - STARTING_RAMPING_COEF) * Math.min(TEAM_RAMPING_DURATION, gamesCount) / TEAM_RAMPING_DURATION;
+    }
 }
 
 function getEntitiesData(entitiesData, type) {
@@ -185,8 +190,8 @@ function getLastGameEntityByLeagueIdEntityId(leagueId, entityId, type) {
     });
 }
 
-function getGamesCountByLeagueIdPlayerId(leagueId, playerId) {
+function getGamesCountByLeagueIdEntityId(leagueId, entityId, type) {
     return storeLib.count({
-        query: 'type="gamePlayer" AND leagueId="' + leagueId + '" AND playerId="' + playerId + '"'
+        query: 'type="game' + type + '" AND leagueId="' + leagueId + '" AND ' + getIdName(type) + '="' + entityId + '"'
     });
 }
