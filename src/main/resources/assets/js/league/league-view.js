@@ -21,10 +21,12 @@ class FoosLeagueView extends RcdDivElement {
     refresh() {
         this.clear();
         return this.retrieveData().then(data => {
-            const division1Panel = new FoosRankingPanel('Players - Division 1', data.playersData, 'Player').init();
-            this.addChild(division1Panel);
-            
-            this.addChild(new FoosRankingChart(data.playersData, data.gameDates).init());
+            const playersRankingPanel = new FoosRankingPanel('Players', data.playersData, data.playersDivisions, 'Player').init();
+            const teamsRankingPanel = new FoosRankingPanel('Teams', data.teamsData, data.teamsDivisions, 'Team').init();
+            this.addChild(playersRankingPanel);
+            this.addChild(teamsRankingPanel);
+            //this.addChild(new FoosRankingChart(data.playersData, data.gameDates).init());
+            //this.addChild(new FoosRankingChart(data.teamsData, data.gameDates).init());
         });
     }
 

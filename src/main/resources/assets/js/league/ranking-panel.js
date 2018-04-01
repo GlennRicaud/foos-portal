@@ -1,16 +1,25 @@
 class FoosRankingPanel extends RcdDivElement {
-    constructor(title, data, type) {
+    constructor(title, data, divisions, type) {
         super();
         this.title = new RcdTextDivElement(title).init();
         this.data = data;
+        this.divisions = divisions;
         this.type = type;
+        
+        this.currentDivisionIdx = 0;
     }
 
     init() {
-        return super.init()
-            .addClass('foos-ranking-panel')
-            .addChild(this.createTable());
-        d
+        super.init().addClass('foos-ranking-panel');
+        if (this.divisions.length > 1) {
+            this.divisionsSelect = new RcdSelectElement().init();
+            this.divisions.forEach((division, idx) => {
+               this.divisionsSelect.addOption('Division ' + (idx + 1)); 
+            });
+            this.addChild(this.divisionsSelect);
+        }
+        
+        return this.addChild(this.createTable());
     }
 
     createTable() {
@@ -25,9 +34,7 @@ class FoosRankingPanel extends RcdDivElement {
 
         const tableBody = new RcdTbodyElement().init();
 
-        Object.keys(this.data).sort((competitorId1, competitorId2) => {
-            return this.data[competitorId2].rampedRating - this.data[competitorId1].rampedRating;
-        }).map((competitorId, index) => {
+        this.getCurrentDivision().map((competitorId, index) => {
             const competitor = this.data[competitorId];
             const lastGameDelta = competitor.ratings[competitor.ratings.length - 1] - competitor.ratings[competitor.ratings.length - 2];
             const periodDelta = competitor.ratings[competitor.ratings.length - 1] - competitor.ratings[0];
@@ -48,5 +55,9 @@ class FoosRankingPanel extends RcdDivElement {
         return new RcdTableElement().init()
             .addChild(tableHeader)
             .addChild(tableBody);
+    }
+    
+    getCurrentDivision() {
+        return this.divisions[this.currentDivisionIdx];
     }
 }
