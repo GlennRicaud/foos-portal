@@ -1,28 +1,43 @@
 var storeLib = require('/lib/store');
+var cacheLib = require('/lib/cache');
 
 var GAME_RANGE = 100;
 var RAMPING_DURATION = 50;
 var STARTING_RAMPING_COEF = 0.80;
 
+var cache = cacheLib.newCache({
+    size: 32,
+    expire: 86400
+});
+
 exports.post = function (req) {
     var leagueId = JSON.parse(req.body).leagueId;
+    var lastGame = getLastGame(leagueId);
+    var lastGameTime = lastGame ? lastGame.time : '';
+    
+    return {
+        contentType: 'application/json',
+        body: cache.get(leagueId + lastGameTime, function() {
+            log.info('Retrieving data for league ' + leagueId + ' and latest game ' + lastGameTime);
+            return getData(leagueId); 
+        })
+    }
+};
 
+function getData(leagueId) {
     var playersData = {};
     var gameDates = [];
     getPlayerRankingData(leagueId, playersData);
     getPlayersData(playersData);
     getPlayerRatingData(leagueId, playersData, gameDates);
-
+    
     return {
-        contentType: 'application/json',
-        body: {
-            data: {
-                playersData: playersData,
-                gameDates: gameDates
-            }
+        data: {
+            playersData: playersData,
+            gameDates: gameDates
         }
-    }
-};
+    };
+}
 
 function getPlayerRankingData(leagueId, playersData) {
     var leaguePlayers = getLeaguePlayersByLeagueId(leagueId);
@@ -111,6 +126,14 @@ function getGamesByLeagueId(leagueId) {
     return storeLib.get({
         query: 'type="game" AND leagueId="' + leagueId + '"',
         count: GAME_RANGE,
+        sort: 'time DESC'
+    });
+}
+
+function getLastGame(leagueId) {
+    return storeLib.get({
+        query: 'type="game" AND leagueId="' + leagueId + '"',
+        count: 1,
         sort: 'time DESC'
     });
 }

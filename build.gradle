@@ -26,6 +26,7 @@ dependencies {
     include "com.enonic.xp:lib-portal:${xpVersion}"
     include "com.enonic.xp:lib-mustache:${xpVersion}"
     include "com.enonic.xp:lib-node:${xpVersion}"
+    include "com.enonic.lib:lib-cache:1.1.0"
     include "com.enonic.lib:lib-router:1.0.0"
     rcdjsfwkcore "systems.rcd.js.fwk.core:rcd-jsfwk-core:3.0.0-alpha-3"
     compile "systems.rcd.js.fwk.core:rcd-jsfwk-core:3.0.0-alpha-3"
