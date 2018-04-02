@@ -14,7 +14,7 @@ router.get('/', function (req) {
             appUrl: urlLib.getAppUrl(),
             baseUrl: urlLib.getBaseUrl(),
             serviceUrl: portalLib.serviceUrl({service:''}),
-            officeLeagueAppUrl: '/portal/draft/office-league/app' //TODO
+            officeLeagueAppUrl: '/app' //TODO
         }),
         contentType: 'text/html'
     };
