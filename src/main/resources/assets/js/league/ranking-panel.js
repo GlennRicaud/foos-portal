@@ -1,8 +1,9 @@
 class FoosRankingPanel extends RcdDivElement {
-    constructor(title, data, divisions, type) {
+    constructor(title, data, gameDates, divisions, type) {
         super();
         this.title = new RcdTextDivElement(title).init();
         this.data = data;
+        this.gameDates = gameDates;
         this.divisions = divisions;
         this.type = type;
         
@@ -19,7 +20,14 @@ class FoosRankingPanel extends RcdDivElement {
             this.addChild(this.divisionsSelect);
         }
         
-        return this.addChild(this.createTable());
+        return this.addChild(this.createBody());
+    }
+    
+    createBody() {
+        return new RcdDivElement().init()
+            .addClass('foos-ranking-body')
+            .addChild(this.createTable())
+            .addChild(new FoosRankingChart(this.data, this.getCurrentDivision(), this.gameDates).init())
     }
 
     createTable() {
@@ -28,7 +36,6 @@ class FoosRankingPanel extends RcdDivElement {
             .addChild(new RcdThElement().setText(this.type))
             .addChild(new RcdThElement().setText('Rank.<br/>points'))
             .addChild(new RcdThElement().setText('Raw<br/>points'))
-            .addChild(new RcdThElement().setText('Last<br/>game'))
             .addChild(new RcdThElement().setText('Period'));
         const tableHeader = new RcdTheadElement().init().addChild(tableHeaderRow);
 
@@ -36,7 +43,6 @@ class FoosRankingPanel extends RcdDivElement {
 
         this.getCurrentDivision().map((competitorId, index) => {
             const competitor = this.data[competitorId];
-            const lastGameDelta = competitor.ratings[competitor.ratings.length - 1] - competitor.ratings[competitor.ratings.length - 2];
             const periodDelta = competitor.ratings[competitor.ratings.length - 1] - competitor.ratings[0];
             return new RcdTrElement().init()
                 .addChild(new RcdTdElement().init().setText(index + 1))
@@ -48,7 +54,6 @@ class FoosRankingPanel extends RcdDivElement {
                 .addChild(
                     new RcdTdElement().init().setText(
                         Math.floor(competitor.rampedRating) == competitor.rating ? '-' : '(' + competitor.rating + ')'))
-                .addChild(new RcdTdElement().init().setText((lastGameDelta > 0 ? '+' : '') + lastGameDelta))
                 .addChild(new RcdTdElement().init().setText((periodDelta > 0 ? '+' : '') + periodDelta));
         }).forEach((tr) => tableBody.addChild(tr));
 

@@ -34,20 +34,19 @@ FoosChartColor.VALUES = [
 
 class FoosRankingChart extends RcdDivElement {
 
-    constructor(data, labels) {
+    constructor(data, division, labels) {
         super();
         this.canvas = new RcdHtmlElement('canvas').init();
-        this.datasets = Object.values(data).sort((competitorData1,competitorData2) => {
-            return competitorData2.rating - competitorData1.rating;
-        }).map((competitorData, index) => {
-            return {
-                label: competitorData.name,
-                fill: false,
-                borderColor: FoosChartColor.VALUES[index % FoosChartColor.VALUES.length],
-                data: competitorData.ratings,
-                pointRadius: 0
-            }
-        });
+        this.datasets = division.map(competitorId => data[competitorId])
+            .map((competitorData, index) => {
+                return {
+                    label: competitorData.name,
+                    fill: false,
+                    borderColor: FoosChartColor.VALUES[index % FoosChartColor.VALUES.length],
+                    data: competitorData.ratings,
+                    pointRadius: 0
+                }
+            });
         this.labels = labels;
     }
 
