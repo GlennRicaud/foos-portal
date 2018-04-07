@@ -13,14 +13,14 @@ var cache = cacheLib.newCache({
 
 exports.post = function (req) {
     var leagueId = JSON.parse(req.body).leagueId;
-    var lastGame = getLastGame(leagueId);
+    var lastGame = getLastFinishedGame(leagueId);
     var lastGameTime = lastGame ? lastGame.time : '';
-    
+
     return {
         contentType: 'application/json',
-        body: cache.get(leagueId + lastGameTime, function() {
+        body: cache.get(leagueId + lastGameTime, function () {
             log.info('Retrieving data for league ' + leagueId + ' and latest game ' + lastGameTime);
-            return getData(leagueId); 
+            return getData(leagueId);
         })
     }
 };
@@ -34,10 +34,10 @@ function getData(leagueId) {
     getEntitiesData(playersData, 'Player');
     getEntitiesData(teamsData, 'Team');
     getEntityRatingData(leagueId, playersData, teamsData, gameDates);
-    
+
     var playersDivisions = getEntitiesDivisions(playersData);
     var teamsDivisions = getEntitiesDivisions(teamsData);
-    
+
     return {
         data: {
             playersData: playersData,
@@ -91,7 +91,8 @@ function getIdName(type) {
 
 function getRampingCoef(gamesCount, type) {
     if (type == 'Player') {
-        return STARTING_RAMPING_COEF + (1 - STARTING_RAMPING_COEF) * Math.min(PLAYER_RAMPING_DURATION, gamesCount) / PLAYER_RAMPING_DURATION;
+        return STARTING_RAMPING_COEF + (1 - STARTING_RAMPING_COEF) * Math.min(PLAYER_RAMPING_DURATION, gamesCount) /
+               PLAYER_RAMPING_DURATION;
     } else {
         return STARTING_RAMPING_COEF + (1 - STARTING_RAMPING_COEF) * Math.min(TEAM_RAMPING_DURATION, gamesCount) / TEAM_RAMPING_DURATION;
     }
@@ -101,7 +102,8 @@ function getEntitiesData(entitiesData, type) {
     for (var entityId in entitiesData) {
         var entity = storeLib.getByKey(entityId);
         entitiesData[entityId].name = entity && entity.name;
-        entitiesData[entityId].imageUrl = entity && '/' + type.toLowerCase() + 's/image/' + entity._versionKey + '/' + encodeURIComponent(entity.name);
+        entitiesData[entityId].imageUrl =
+            entity && '/' + type.toLowerCase() + 's/image/' + entity._versionKey + '/' + encodeURIComponent(entity.name);
     }
 }
 
@@ -145,14 +147,14 @@ function getEntitiesDivisions(data) {
     var entitiesDivisions = [];
 
     var sortedCompetitorIds = Object.keys(data)
-        .sort(function(competitorId1, competitorId2) {
+        .sort(function (competitorId1, competitorId2) {
             return data[competitorId2].rampedRating - data[competitorId1].rampedRating;
         });
-    
+
     var currentCompetitorIndex = 0;
     var divisionSize = sortedCompetitorIds.length > 20 ? 12 : sortedCompetitorIds.length;
     var divisionCount = sortedCompetitorIds.length / divisionSize;
-    
+
     for (var i = 0; i < divisionCount; i++) {
         var currentDivision = [];
         entitiesDivisions.push(currentDivision);
@@ -161,7 +163,7 @@ function getEntitiesDivisions(data) {
             currentCompetitorIndex++;
         }
     }
-    
+
     return entitiesDivisions;
 }
 
@@ -194,9 +196,9 @@ function getGamesByLeagueId(leagueId) {
     });
 }
 
-function getLastGame(leagueId) {
+function getLastFinishedGame(leagueId) {
     return storeLib.get({
-        query: 'type="game" AND leagueId="' + leagueId + '"',
+        query: 'type="game" AND finished="true" AND leagueId="' + leagueId + '"',
         count: 1,
         sort: 'time DESC'
     });
