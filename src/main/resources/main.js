@@ -1,6 +1,7 @@
 var mustacheLib = require('/lib/xp/mustache');
 var portalLib = require('/lib/xp/portal');
 var router = require('/lib/router')();
+var slack = require('/lib/slack');
 
 var urlLib = require("/lib/url");
 
@@ -13,8 +14,9 @@ router.get('/', function (req) {
         body: mustacheLib.render(mainTemplate, {
             appUrl: urlLib.getAppUrl(),
             baseUrl: urlLib.getBaseUrl(),
-            serviceUrl: portalLib.serviceUrl({service:''}),
+            serviceUrl: portalLib.serviceUrl({service: ''}),
             officeLeagueAppUrl: '/app' //TODO
+            // officeLeagueAppUrl: '/portal/draft/office-league/app'
         }),
         contentType: 'text/html'
     };
@@ -42,3 +44,5 @@ router.get('/sw.js', function () {
 exports.get = function (req) {
     return router.dispatch(req);
 };
+
+slack.init();
