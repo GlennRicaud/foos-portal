@@ -26,6 +26,10 @@ exports.count = function (params) {
     return connect().query(params).total;
 };
 
+exports.query = function (params) {
+    return connect().query(params);
+};
+
 function connect() {
     return nodeLib.connect({
         repoId: 'office-league',

@@ -13,6 +13,7 @@ class FoosApplication extends RcdObject {
     createViews() {
         new FoosLeaguesView().init();
         new FoosLeagueView().init();
+        new FoosPlayerProfileView().init();
         return this;
     }
 

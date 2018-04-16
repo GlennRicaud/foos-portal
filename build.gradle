@@ -26,8 +26,10 @@ dependencies {
     include "com.enonic.xp:lib-portal:${xpVersion}"
     include "com.enonic.xp:lib-mustache:${xpVersion}"
     include "com.enonic.xp:lib-node:${xpVersion}"
+    include "com.enonic.xp:lib-event:${xpVersion}"
     include "com.enonic.lib:lib-cache:1.1.0"
     include "com.enonic.lib:lib-router:1.0.0"
+    include 'com.enonic.lib:lib-http-client:1.0.1'
     rcdjsfwkcore "systems.rcd.js.fwk.core:rcd-jsfwk-core:3.0.0-alpha-3"
     compile "systems.rcd.js.fwk.core:rcd-jsfwk-core:3.0.0-alpha-3"
 }
@@ -69,6 +71,11 @@ task mergeJs( type: com.eriwen.gradle.js.tasks.CombineJsTask ) {
               , "${rootProject.buildDir}/resources/main/assets/js/league/league-view.js"
               , "${rootProject.buildDir}/resources/main/assets/js/league/league-item.js"
               , "${rootProject.buildDir}/resources/main/assets/js/league/leagues-view.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/player/player-profile-column.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/player/player-profile-view.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/player/player-radar-chart.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/player/player-stats-panel.js"
+              , "${rootProject.buildDir}/resources/main/assets/js/player/player-summary-panel.js"
               , "${rootProject.buildDir}/resources/main/assets/js/app.js"]
     dest = file( "${rootProject.buildDir}/resources/main/assets/js/main.js" )
 }
