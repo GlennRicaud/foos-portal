@@ -21,7 +21,9 @@ exports.init = function () {
 
 var handleGameUpdate = function (game) {
     // log.info('Game event: ' + JSON.stringify(game, null, 2));
-
+    if (game.league.name.toLowerCase().indexOf('enonic') < 0) {
+        return;
+    }
     if (!game.finished && game.sides.blue.totalScore === 0 && game.sides.red.totalScore === 0) {
         sendGameStartNotification(game);
     } else if (game.finished && gameHasRatings(game)) {
@@ -159,7 +161,7 @@ var sendGameFinishedNotification = function (game) {
 
     var att1 = {
         "color": "#3389c6",
-        "pretext": "A game is finished in Office League",
+        "pretext": "A game has finished in Office League",
         "title": red.name + " - vs - " + blue.name,
         "title_link": game.gameUrl,
         "text": resultText + '\r\n' + ratingText,
