@@ -134,9 +134,9 @@ var sendGameFinishedNotification = function (game) {
 
     var blueDelta = ratingDeltaBySide(game, 'blue');
     var redDelta = ratingDeltaBySide(game, 'red');
-    var ratingText = getGamePlayerNamesBySideStr(game, 'blue', ' and ') + (blueDelta > 0 ? ' win ' : ' loose ') +
+    var ratingText = getGamePlayerNamesBySideStr(game, 'blue', ' and ') + (blueDelta > 0 ? ' win ' : ' lose ') +
                      Math.abs(blueDelta) + " rating points.\r\n";
-    ratingText += getGamePlayerNamesBySideStr(game, 'red', ' and ') + (redDelta > 0 ? ' win ' : ' loose ') +
+    ratingText += getGamePlayerNamesBySideStr(game, 'red', ' and ') + (redDelta > 0 ? ' win ' : ' lose ') +
                   Math.abs(redDelta) + " rating points.";
 
     var players = [], player, playerAtt = [];
